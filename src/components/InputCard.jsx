@@ -8,7 +8,6 @@ import { FaLinkedinIn, FaTwitter, FaYoutube } from 'react-icons/fa';
 import imgBull from '../assets/Logo-TL.png';
 import axios from 'axios';
 import { BiWorld } from 'react-icons/bi';
-import { useNavigate } from 'react-router-dom';
 
 const InputCard = () => {
   const [formData, setFormData] = useState({
@@ -41,7 +40,6 @@ const InputCard = () => {
       country: region,
     });
   };
-  const navigate = useNavigate
 
   const handleSubmit = async () => {
     try {
@@ -117,9 +115,9 @@ const InputCard = () => {
           required={true} 
         />
         <label className="dropdown-label">What service do you need</label>
-        <Dropdown options={services} placeholder={'Select a service'} onSelect={handleServiceSelect} required={true} /> {/* Set required prop to true */}
+        <Dropdown options={services} placeholder={'Select a service'} onSelect={handleServiceSelect} required={true} /> 
         <label className="dropdown-label">Select your country</label>
-        <Dropdown options={regions} placeholder={'Select your country'} onSelect={handleSelectedRegion} required={true} /> {/* Set required prop to true */}
+        <Dropdown options={regions} placeholder={'Select your country'} onSelect={handleSelectedRegion} required={true} /> 
         <Input
           type={'text'}
           h={'40px'}
