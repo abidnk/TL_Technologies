@@ -19,6 +19,7 @@
     font-size: 20px;
     width: 100%;
     text-align: start;
+    margin-left: 40px;
 }
 
 .card:hover {
