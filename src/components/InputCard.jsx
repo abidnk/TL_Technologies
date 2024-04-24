@@ -127,7 +127,7 @@ const InputCard = () => {
           required={true} 
         />
 
-<a href='https://wa.me/+919061432814?text=urlencodedtext'>
+<a href='https://wa.me/+919061432814?text=urlencodedtext' style={{textDecoration:"none"}}>
         <div
           style={{
             width: '100%',
