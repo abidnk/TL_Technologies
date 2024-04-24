@@ -5,7 +5,7 @@ import { Dropdown } from './Dropdown.jsx';
 import { Button } from './Button.jsx';
 import { FaLocationDot, FaInstagram, FaPinterest, FaFacebookF } from 'react-icons/fa6';
 import { FaLinkedinIn, FaTwitter, FaYoutube } from 'react-icons/fa';
-import imgBull from '../assets/Logo-TL.png';
+import TL_Logo from '../assets/Logo-TL.png';
 import axios from 'axios';
 import { BiWorld } from 'react-icons/bi';
 
@@ -216,7 +216,7 @@ const InputCard = () => {
             }}
           >
             powered by
-            <img src={imgBull} style={{ height: '28px', width: '28px' }} />
+            <img src={TL_Logo} style={{ height: '28px', width: '28px' }} />
           </div>
         </div>
       </div>
