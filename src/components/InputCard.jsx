@@ -19,8 +19,14 @@ const InputCard = () => {
     message: '',
   });
 
+  const [errors, setErrors] = useState({
+    username: '',
+    email: '',
+    phone: '',
+    message: '',
+  });
+
   const handleInputChange = (name, value) => {
-    console.log('changing', value);
     setFormData({
       ...formData,
       [name]: value,
@@ -41,12 +47,58 @@ const InputCard = () => {
     });
   };
 
-  const handleSubmit = async () => {
-    try {
-      const response = await axios.post('http://localhost:3003/feedback', formData);
-      console.log(response.data);
-    } catch (error) {
-      console.error('Error:', error);
+  const validateForm = () => {
+    let isValid = true;
+    const newErrors = {};
+
+    if (!formData.username.trim()) {
+      newErrors.username = 'Please enter your name';
+      isValid = false;
+    }
+
+    if (!formData.email.trim()) {
+      newErrors.email = 'Please enter your email';
+      isValid = false;
+    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Please enter a valid email address';
+      isValid = false;
+    }
+
+    if (!formData.phone.trim()) {
+      newErrors.phone = 'Please enter your phone number';
+      isValid = false;
+    } else if (!/^\d{10}$/.test(formData.phone)) {
+      newErrors.phone = 'Please enter a valid 10-digit phone number';
+      isValid = false;
+    }
+
+    if (!formData.message.trim()) {
+      newErrors.message = 'Please enter your message';
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    if (validateForm()) {
+      try {
+        const response = await axios.post('http://localhost:3003/feedback', formData);
+        console.log(response.data);
+        // Reset form data after successful submission
+        setFormData({
+          username: '',
+          email: '',
+          phone: '',
+          service: '',
+          country: '',
+          message: '',
+        });
+      } catch (error) {
+        console.error('Error:', error);
+      }
     }
   };
 
@@ -66,6 +118,7 @@ const InputCard = () => {
     'SMS:GATEWAY',
     'SOCIAL MEDIA MANAGMENT',
   ];
+
   const regions = [
     'America',
     'India',
@@ -93,59 +146,73 @@ const InputCard = () => {
     <div className="card1">
       <h1 className="head">Get in touch!</h1>
       <div className="container1">
-        <Input
-          type={'text'}
-          placeholder={'Name'}
-          labels={'Name'}
-          onChange={(value) => handleInputChange('username', value)}
-          required={true} 
-        />
-        <Input
-          type={'tel'}
-          placeholder={'phone Number'}
-          labels={'Phone Number'}
-          onChange={(value) => handleInputChange('phone', value)}
-          required={true} 
-        />
-        <Input
-          type={'email'}
-          placeholder={'Email Address'}
-          labels={'Email Address'}
-          onChange={(value) => handleInputChange('email', value)}
-          required={true} 
-        />
-        <label className="dropdown-label">What service do you need</label>
-        <Dropdown options={services} placeholder={'Select a service'} onSelect={handleServiceSelect} required={true} /> 
-        <label className="dropdown-label">Select your country</label>
-        <Dropdown options={regions} placeholder={'Select your country'} onSelect={handleSelectedRegion} required={true} /> 
-        <Input
-          type={'text'}
-          h={'40px'}
-          placeholder={'Tell us what we should help with you'}
-          labels={'How should we help you?'}
-          onChange={(value) => handleInputChange('message', value)}
-          required={true} 
-        />
+        <form onSubmit={handleSubmit}>
+          <Input
+            type={'text'}
+            placeholder={'Name'}
+            labels={'Name'}
+            value={formData.username}
+            onChange={(value) => handleInputChange('username', value)}
+            required={true}
+          />
+          {errors.username && <p className="error">{errors.username}</p>}
 
-<a href='https://wa.me/+919061432814?text=urlencodedtext' style={{textDecoration:"none"}}>
+          <Input
+            type={'email'}
+            placeholder={'Email Address'}
+            labels={'Email Address'}
+            value={formData.email}
+            onChange={(value) => handleInputChange('email', value)}
+            required={true}
+          />
+          {errors.email && <p className="error">{errors.email}</p>}
+
+          <Input
+            type={'tel'}
+            placeholder={'Phone Number'}
+            labels={'Phone Number'}
+            value={formData.phone}
+            onChange={(value) => handleInputChange('phone', value)}
+            required={true}
+          />
+          {errors.phone && <p className="error">{errors.phone}</p>}
+
+          <label className="dropdown-label">What service do you need</label>
+          <Dropdown options={services} placeholder={'Select a service'} onSelect={handleServiceSelect} required={true} />
+          
+          <label className="dropdown-label">Select your country</label>
+          <Dropdown options={regions} placeholder={'Select your country'} onSelect={handleSelectedRegion} required={true} />
+
+          <Input
+            type={'text'}
+            h={'40px'}
+            placeholder={'Tell us what we should help with you'}
+            labels={'How should we help you?'}
+            onChange={(value) => handleInputChange('message', value)}
+            required={true}
+          />
+
+          <div
+            style={{
+              width: '100%',
+              justifyContent: 'center',
+              alignContent: 'center',
+              display: 'flex',
+              marginTop:'10px'
+            }}
+          >
+            <Button type="submit" value={'Lets Chat'} />
+          </div>
+        </form>
+
         <div
           style={{
+            gap: '10px',
             width: '100%',
             justifyContent: 'center',
             alignContent: 'center',
             display: 'flex',
-          }}
-        >
-          <Button value={'Lets Chat'} onClick={handleSubmit} />
-        </div>
-          </a>
-        <div
-          style={{
-            gap: '10px',
-            width: '100%  ',
-            justifyContent: 'center',
-            alignContent: 'center',
-            display: 'flex',
+            marginTop:'20px'
           }}
         >
           <a href="https://www.google.com/maps/place/TL+TECHNOLOGIES+PRIVATE+LIMITED/@8.5795247,76.8567485,16z/data=!4m6!3m5!1s0x3b05bfb13fa37fc1:0xf89d4bd32e84246f!8m2!3d8.5799619!4d76.8632868!16s%2Fg%2F11p5shtd3y?entry=ttu">
@@ -176,8 +243,6 @@ const InputCard = () => {
         <div
           style={{
             width: '100%  ',
-            paddingBlock: '20px',
-            gap: '4px',
             fontSize: '10px',
             fontFamily: 'sans-serif',
             color: 'white',
@@ -187,6 +252,7 @@ const InputCard = () => {
             backgroundColor: 'grey',
             padding: '10px',
             borderRadius: '10px',
+            marginTop:'40px'
           }}
         >
           <span style={{ marginRight: '100px' }}>
